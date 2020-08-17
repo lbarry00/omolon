@@ -1,5 +1,7 @@
 import React, {Component} from "react";
 
+import auth from "../../util/auth";
+
 interface ILoggedOutViewState {
   loading: boolean
 }
@@ -20,74 +22,10 @@ class LoggedOutView extends Component<{}, ILoggedOutViewState> {
     const urlParams = new URLSearchParams(window.location.search);
     const accessCode = urlParams.get("code");
 
-    // get the access token and refresh token
     if (accessCode) {
-      /*
-        POST https://www.bungie.net/Platform/App/OAuth/Token/ HTTP/1.1
-        Authorization: Basic {base64encoded(client-id:client-secret)}
-        Content-Type: application/x-www-form-urlencoded
-
-        grant_type=authorization_code&code={auth-code}
-      */
-
       this.setState({"loading": true});
 
-      const axios = require("axios");
-      const qs = require("qs");
-      const clientId = process.env.REACT_APP_OAUTH_CLIENT_ID;
-      const clientSecret = process.env.REACT_APP_OAUTH_CLIENT_SECRET;
-      const b64 = btoa(clientId + ":" + clientSecret); // convert to base64 encoded
-
-      console.log("Auth Code: " + accessCode);
-      console.log("B64: " + b64);
-
-      const data = qs.stringify({
-        "grant_type": "authorization_code",
-        "code": accessCode
-      })
-      const settings = {
-        method: "post",
-        url: "https://www.bungie.net/Platform/App/OAuth/token/",
-        headers: {
-          "Authorization": "Basic " + b64,
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        data: data
-      }
-
-      axios(settings)
-      .then(function (response) {
-        const data = response.data;
-        const now = Date.now(); // epoch, for calculating the expiration timestamps
-
-        let authSettings = {}; // object to store in local storage w/ tokens
-        authSettings["membership_id"] = data.membership_id;
-
-        // add auth/refresh tokens to object, plus calculate their expiration timestamps
-        if (data.access_token) {
-          const accessExpiry = now + (data.expires_in * 1000); // api returns seconds, we convert it to ms for epoch
-
-          authSettings["access_token"] = {
-            "token": data.access_token,
-            "expires_at": accessExpiry
-          }
-        }
-        if (data.refresh_token) {
-          const refreshExpiry = now + (data.refresh_expires_in * 1000);
-
-          authSettings["refresh_token"] = {
-            "token": data.refresh_token,
-            "expires_at": refreshExpiry
-          }
-        }
-        // set the stuff in local storage, redirect to character select
-        const authString = JSON.stringify(authSettings);
-        localStorage.setItem("settings.auth", authString);
-        window.location.href = "/character-select";
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      auth.getOAuthTokensFromCode(accessCode);
     }
   }
 

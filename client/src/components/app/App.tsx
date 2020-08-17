@@ -8,6 +8,7 @@ import {
 
 import LoggedInView from '../../views/LoggedInView/LoggedInView';
 import LoggedOutView from '../../views/LoggedOutView/LoggedOutView';
+import ls from "../../util/localStorage"
 
 class App extends Component {
   render() {
@@ -27,7 +28,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     // Show the component only when we have an auth key
     // Otherwise, redirect the user to logged out page
     <Route {...rest} render={props => (
-      localStorage.getItem("settings.auth") ?
+      ls.get("settings.auth") ?
       <Component {...props} />
       : <Redirect to="/" />
     )} />

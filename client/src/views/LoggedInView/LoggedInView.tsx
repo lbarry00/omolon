@@ -8,10 +8,12 @@ import {
 import MyLoadoutsView from '../MyLoadoutsView/MyLoadoutsView';
 import CreateLoadoutView from '../CreateLoadoutView/CreateLoadoutView';
 import CharacterSelectView from '../CharacterSelectView/CharacterSelectView';
+import ls from "../../util/localStorage";
 
 class LoggedInView extends Component {
+
   handleLogout() {
-    localStorage.removeItem("settings.auth");
+    ls.remove("settings.auth");
     window.location.href = "/";
   }
 
