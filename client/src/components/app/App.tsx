@@ -27,7 +27,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     // Show the component only when we have an auth key
     // Otherwise, redirect the user to logged out page
     <Route {...rest} render={props => (
-      localStorage.getItem("authKey") ?
+      localStorage.getItem("settings.auth") ?
       <Component {...props} />
       : <Redirect to="/" />
     )} />
