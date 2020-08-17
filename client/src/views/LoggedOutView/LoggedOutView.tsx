@@ -1,9 +1,17 @@
 import React, {Component} from "react";
 
-class LoggedOutView extends Component {
+interface ILoggedOutViewState {
+  loading: boolean
+}
+
+class LoggedOutView extends Component<{}, ILoggedOutViewState> {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      loading: false
+    }
   }
 
   componentDidMount() {
@@ -21,6 +29,8 @@ class LoggedOutView extends Component {
 
         grant_type=authorization_code&code={auth-code}
       */
+
+      this.setState({"loading": true});
 
       const axios = require("axios");
       const qs = require("qs");
@@ -84,6 +94,23 @@ class LoggedOutView extends Component {
   render() {
     const clientId = process.env.REACT_APP_OAUTH_CLIENT_ID;
 
+    // don't render the actual homepage if this is the bungie.net oauth callback
+    const loadingStatus = this.state.loading;
+    if (loadingStatus) {
+      return (
+        <div>
+          <nav>
+            <h1>Destiny Loadouts</h1>
+            <div className="nav-right">
+              <a href="#about">About</a>
+            </div>
+          </nav>
+          <h2>Loading...</h2>
+        </div>
+      )
+    }
+
+    // actual homepage
     return (
       <div>
         <nav>
