@@ -1,0 +1,57 @@
+@import "../../styles/colors.scss";
+
+.character-select-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: baseline;
+  width: 80%;
+}
+
+.memberships-list {
+  display: flex;
+  flex-direction: column;
+
+  .membership {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border: 1px solid black;
+    margin: 18px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    p {
+      font-size: 24px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .membership-type {
+    font-weight: bold;
+  }
+
+  .xbox {
+    color: $platform-xbox;
+  }
+  .playstation {
+    color: $platform-playstation;
+  }
+  .steam {
+    color: $platform-steam;
+  }
+  .stadia {
+    color: $platform-stadia;
+  }
+  .blizzard {
+    color: $platform-blizzard;
+  }
+}
+
+.characters {
+  width: 474px;
+}

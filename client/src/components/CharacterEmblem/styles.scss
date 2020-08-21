@@ -1,0 +1,42 @@
+.emblem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 96px;
+  margin: 18px;
+  color: white;
+  text-shadow: 2px 2px 2px black;
+  background-repeat: no-repeat;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .left {
+    margin: 0;
+    margin-left: 100px;
+
+    /* Account display name */
+    h3 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: lighter;
+    }
+
+    /* Gender/race */
+    p {
+      margin: 0;
+      font-weight: lighter;
+    }
+  }
+
+  /* Power level */
+  .light {
+    margin-right: 0.5em;
+    align-self: center;
+    font-size: 38px;
+    font-weight: 500;
+    color: #e5d163;
+  }
+}

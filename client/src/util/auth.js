@@ -71,6 +71,7 @@ export function getOAuthTokensFromCode(accessCode) {
   });
 }
 
+// use refresh token to get another access token
 export function getAccessTokenFromRefresh() {
   /*
     POST https://www.bungie.net/Platform/App/OAuth/Token/ HTTP/1.1
