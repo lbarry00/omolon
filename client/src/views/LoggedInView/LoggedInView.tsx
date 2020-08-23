@@ -21,7 +21,7 @@ class LoggedInView extends Component {
     return (
       <div>
         <nav>
-          <h1>Destiny Loadouts</h1>
+          <h1>Omolon</h1>
           <div className="nav-right">
             <NavLink to="/loadouts">My Loadouts</NavLink>
             <NavLink to="/create">Create Loadout</NavLink>

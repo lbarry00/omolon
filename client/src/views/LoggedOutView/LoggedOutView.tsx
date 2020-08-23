@@ -52,7 +52,7 @@ class LoggedOutView extends Component<{}, ILoggedOutViewState> {
     return (
       <div>
         <nav>
-          <h1>Destiny Loadouts</h1>
+          <h1>Omolon</h1>
           <div className="nav-right">
             <a href="#about">About</a>
           </div>
@@ -62,8 +62,8 @@ class LoggedOutView extends Component<{}, ILoggedOutViewState> {
           <a href={"https://www.bungie.net/en/OAuth/Authorize?client_id=" + clientId + "&response_type=code"}>Login</a>
         </div>
         <div id="about">
-          <h2>What is Destiny Loadouts?</h2>
-          <p>Destiny Loadouts is a convenient way to create, equip, and share gear loadouts in <a href="http://destinythegame.com">Destiny 2</a></p>
+          <h2>What is Omolon?</h2>
+          <p>Omolon is a convenient way to create, equip, and share gear loadouts in <a href="http://destinythegame.com">Destiny 2</a>.</p>
           <h2>What is a loadout?</h2>
           <p>A loadout is a set of items that can be equipped to a character, including subclasses, armor, weapons, armor mods, weapon mods, ghost shells, sparrows.</p>
         </div>
