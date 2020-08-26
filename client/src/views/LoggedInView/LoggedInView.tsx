@@ -8,7 +8,10 @@ import {
 import MyLoadoutsView from '../MyLoadoutsView/MyLoadoutsView';
 import CreateLoadoutView from '../CreateLoadoutView/CreateLoadoutView';
 import CharacterSelectView from '../CharacterSelectView/CharacterSelectView';
+import OmolonButton from "../../components/OmolonButton/OmolonButton";
 import ls from "../../util/localStorage";
+
+import "./styles.scss";
 
 class LoggedInView extends Component {
 
@@ -19,16 +22,16 @@ class LoggedInView extends Component {
 
   render() {
     return (
-      <div>
-        <nav>
-          <h1>Omolon</h1>
+      <div className="content-top">
+        <div className="nav">
+          <h1 className="stretch">OMOLON</h1>
           <div className="nav-right">
             <NavLink to="/loadouts">My Loadouts</NavLink>
             <NavLink to="/create">Create Loadout</NavLink>
             <NavLink to="/character-select">Change Character</NavLink>
-            <input type="button" value="Logout" id="logout-button" onClick={() => this.handleLogout()}></input>
+            <OmolonButton to="" text="LOGOUT" onClick={() => this.handleLogout()} />
           </div>
-        </nav>
+        </div>
 
         <Switch>
           <Route path="/loadouts" component={MyLoadoutsView}></Route>

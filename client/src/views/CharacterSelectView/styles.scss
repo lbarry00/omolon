@@ -1,38 +1,51 @@
 @import "../../styles/colors.scss";
 
+.character-select-view {
+  color: white;
+  padding: 10px;
+}
+
 .character-select-top {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   align-items: baseline;
-  width: 80%;
 }
 
 .memberships-list {
   display: flex;
   flex-direction: column;
+  margin: 50px;
 
   .membership {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    border: 1px solid black;
-    margin: 18px;
+    padding: 10px;
+    margin: 10px;
+    margin-left: -5px;
+    padding-left: -5px;
+    border: 5px solid $omolon-charcoal;
+    background-color: white;
+    color: black;
+    transition: 0.3s;
 
     &:hover {
       cursor: pointer;
+      border: 5px solid $omolon-teal;
+    }
+
+    .membership-type {
+      font-weight: bold;
+      font-size: 22px;
     }
 
     p {
-      font-size: 24px;
+      font-size: 18px;
       margin-top: 10px;
       margin-bottom: 10px;
     }
-  }
-
-  .membership-type {
-    font-weight: bold;
   }
 
   .xbox {
@@ -54,4 +67,15 @@
 
 .characters {
   width: 474px;
+  margin: 50px;
+
+  .emblem {
+    border: 5px solid $omolon-charcoal;
+    transition: 0.3s;
+    margin-left: -5px;
+    padding-left: -5px;
+    &:hover {
+      border: 5px solid $omolon-teal;
+    }
+  }
 }

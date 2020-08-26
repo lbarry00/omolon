@@ -1,0 +1,15 @@
+@import "./colors.scss";
+
+html {
+  font-family: Helvetica, sans-serif;
+  background-color: $omolon-charcoal;
+
+  a {
+    text-decoration: none;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}

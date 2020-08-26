@@ -13,6 +13,8 @@ interface ICharacterSelectViewState {
   "characters": object,
   "charactersLoading": boolean,
   "displayName": string,
+  "selectedMembership": string,
+  "selectedCharacter": string
 }
 
 class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
@@ -23,15 +25,17 @@ class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
       "memberships": {},
       "characters": {},
       "charactersLoading": false,
-      "displayName": ""
+      "displayName": "",
+      "selectedMembership": "",
+      "selectedCharacter": ""
     }
   }
 
   componentDidMount() {
-    let profile = ls.get("settings.profile");
+    let mStorage = ls.get("settings.memberships");
 
     // retrieve membership info if we don't already have it
-    if (!profile) {
+    if (!mStorage) {
       const auth = ls.get("settings.auth");
       let accessToken = auth.access_token.token;
 
@@ -60,20 +64,28 @@ class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
           };
         });
 
+        ls.set("settings.memberships", membershipList);
         thisObj.setState({"memberships": membershipList});
       })
       .catch(function (error) {
         console.log(error);
       })
+    } else {
+      this.setState({"memberships": mStorage})
     }
   }
 
   handleSelectMembership(membershipType) {
-    this.setState({"charactersLoading": true, "characters" :{}});
-
     const memberships = this.state.memberships;
     const membershipId = memberships[membershipType].membershipId;
     let characters = {};
+
+    // set loading state, save selected membership, reset characters state
+    this.setState({
+      "charactersLoading": true,
+      "selectedMembership": membershipId,
+      "characters": {}
+    });
 
     const thisObj = this;
 
@@ -107,6 +119,21 @@ class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
     })
   }
 
+  handleSelectCharacter(charId) {
+    this.setState({"selectedCharacter": charId});
+
+    // verify membership and char are selected and save
+    if (this.state.selectedCharacter && this.state.selectedMembership) {
+      const profile = {
+        "membershipId": this.state.selectedMembership,
+        "characterId": this.state.selectedCharacter
+      }
+      ls.set("settings.profile", profile);
+    }
+
+    window.location.href= "/loadouts";
+  }
+
   render() {
 
     const memberships = this.state.memberships;
@@ -129,7 +156,9 @@ class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
     if (Object.keys(characters).length > 0) {
       cListElement = Object.keys(characters).map((id) => {
         return (
-          <CharacterEmblem character={characters[id]} displayName={this.state.displayName} key={id} />
+          <div onClick={() => this.handleSelectCharacter(id)} key={id}>
+            <CharacterEmblem character={characters[id]} displayName={this.state.displayName} />
+          </div>
         )
       });
     } else if (this.state.charactersLoading) {
@@ -143,7 +172,7 @@ class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
         <h1>Character Select</h1>
         <div className="character-select-top">
           <div className="memberships-list">
-            <h2>Bungie.net Linked Accounts</h2>
+            <h2>Bungie.net Linked Platforms</h2>
             {mListElement}
           </div>
           <div className="characters">

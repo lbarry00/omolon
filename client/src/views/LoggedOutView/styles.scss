@@ -1,0 +1,123 @@
+@import "../../styles/colors.scss";
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $omolon-teal;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  color: white;
+  font-weight: bold;
+  text-shadow: 2px 2px 3px black;
+
+  h1 {
+    color: white;
+    text-shadow: 2px 2px 3px black;
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+}
+
+.nav-right {
+  a {
+    padding: 20px;
+    color: darken(white, 10%);
+    text-decoration: none;
+    text-shadow: 1px 1px 3px black;
+    transition: 0.3s;
+
+    &:hover {
+      color: white;
+    }
+  }
+}
+
+.auth-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px;
+  background-color: $omolon-slate;
+  color: white;
+
+  h2 {
+    text-shadow: 2px 2px 3px black;
+  }
+
+  p {
+    margin: 0;
+    text-shadow: 2px 2px 3px black;
+  }
+
+  .omolon-button {
+    margin: 20px;
+    padding: 40px 70px;
+    border: 5px solid $omolon-teal;
+    color: $omolon-teal;
+    font-weight: bold;
+  }
+}
+
+.about-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 100px;
+  background-color: white;
+
+  img {
+    width: 80%;
+  }
+
+  .about-text {
+    margin-left: 100px;
+  }
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  background-color: $omolon-teal;
+  padding: 10px;
+  font-size: 16px;
+
+  a {
+    margin-left: 10px;
+    margin-right: 10px;
+    color: darken(white, 10%);
+    text-shadow: 1px 1px 2px black;
+    transition: 0.3s;
+
+    &:hover {
+      color: white;
+    }
+  }
+}
+
+.loading {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  h2 {
+    color: white;
+    top: 50%;
+  }
+}
+
+.stretch {
+  // stretch text
+  -webkit-transform:scale(1.37,1); /* Safari and Chrome */
+  -moz-transform:scale(1.37,1); /* Firefox */
+  -ms-transform:scale(1.37,1); /* IE 9 */
+  -o-transform:scale(1.37,1); /* Opera */
+  transform:scale(1.37,1); /* W3C */
+}
