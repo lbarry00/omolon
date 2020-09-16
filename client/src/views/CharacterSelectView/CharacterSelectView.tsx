@@ -14,7 +14,7 @@ interface ICharacterSelectViewState {
   "charactersLoading": boolean,
   "displayName": string,
   "selectedMembership": string,
-  "selectedCharacter": string
+  "selectedMemType": number
 }
 
 class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
@@ -27,7 +27,7 @@ class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
       "charactersLoading": false,
       "displayName": "",
       "selectedMembership": "",
-      "selectedCharacter": ""
+      "selectedMemType": -1
     }
   }
 
@@ -84,6 +84,7 @@ class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
     this.setState({
       "charactersLoading": true,
       "selectedMembership": membershipId,
+      "selectedMemType": membershipType,
       "characters": {}
     });
 
@@ -120,16 +121,13 @@ class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
   }
 
   handleSelectCharacter(charId) {
-    this.setState({"selectedCharacter": charId});
-
-    // verify membership and char are selected and save
-    if (this.state.selectedCharacter && this.state.selectedMembership) {
-      const profile = {
-        "membershipId": this.state.selectedMembership,
-        "characterId": this.state.selectedCharacter
-      }
-      ls.set("settings.profile", profile);
+    // save selected in storage
+    const profile = {
+      "membershipId": this.state.selectedMembership,
+      "membershipType": this.state.selectedMemType,
+      "characterId": charId
     }
+    ls.set("settings.profile", profile);
 
     window.location.href= "/loadouts";
   }
