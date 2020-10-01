@@ -1,6 +1,7 @@
 import { get, set } from "idb-keyval";
 
 const axios = require("axios");
+const _ = require("lodash");
 
 export default {
   isValidManifest,
@@ -68,8 +69,12 @@ function downloadManifest(manifestUrl) {
 
   axios(settings)
     .then(function(response) {
-      const data = response.data;
-      set("destiny-manifest", data);
+      const manifest = response.data;
+
+      // add each definition individually
+      _.forEach(_.keys(manifest), (def) => {
+        set(def, manifest[def]);
+      })
     })
     .catch(function(error) {
       console.log(error);
