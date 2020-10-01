@@ -105,9 +105,9 @@ class CharacterSelectView extends Component<{}, ICharacterSelectViewState> {
 
       _.forEach(Object.keys(data), function(charId) {
         characters[charId] = {
-          "classType": data[charId].classType,
-          "raceType": data[charId].raceType,
-          "genderType": data[charId].genderType,
+          "classHash": data[charId].classHash,
+          "raceHash": data[charId].raceHash,
+          "genderHash": data[charId].genderHash,
           "light": data[charId].light,
           "emblem": data[charId].emblemBackgroundPath
         }

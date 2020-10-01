@@ -1,8 +1,5 @@
 export default {
-  getMembershipTypeName,
-  getClassTypeName,
-  getRaceName,
-  getGenderName
+  getMembershipTypeName
 }
 
 const membershipTypes = {
@@ -13,35 +10,8 @@ const membershipTypes = {
   5: "Stadia"
 };
 
-const classTypes = {
-  0: "Titan",
-  1: "Hunter",
-  2: "Warlock"
-};
-
-const raceTypes = {
-  0: "Human",
-  1: "Awoken",
-  2: "Exo"
-};
-
-const genderTypes = {
-  0: "Male",
-  1: "Female"
-};
-
+// can't use manifest for this as it's needed before we validate/get the manifest
+// also there's just no definition for it
 export function getMembershipTypeName(membershipType) {
   return membershipTypes[membershipType];
-}
-
-export function getClassTypeName(classType) {
-  return classTypes[classType];
-}
-
-export function getRaceName(raceType) {
-  return raceTypes[raceType];
-}
-
-export function getGenderName(genderType) {
-  return genderTypes[genderType];
 }
