@@ -1,0 +1,34 @@
+.loadout-item-toggle {
+  img {
+    display: block;
+  }
+}
+
+.item-toggled-off {
+  position: relative;
+
+  &.subclass:before {
+    transform: rotateY(0deg) rotate(45deg);
+    left: 24px;
+    top: 24px;
+    height: 70%;
+    width: 70%;
+
+    margin: 0;
+    padding: 0;
+  }
+
+  &:before {
+    content: "";
+    background-color: #FFFFFF99;
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+  }
+
+  img {
+    display: block;
+  }
+}
