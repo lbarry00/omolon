@@ -1,7 +1,5 @@
 import { get } from "idb-keyval";
 
-const _ = require("lodash");
-
 export default {
   getDefinition
 }
@@ -12,8 +10,8 @@ async function getDefinition(definitionType, hash) {
       if (definition) {
         return definition[hash];
       } else {
-        return null;
         console.log("Definition not found.");
+        return null;
       }
     })
     .catch(err => {

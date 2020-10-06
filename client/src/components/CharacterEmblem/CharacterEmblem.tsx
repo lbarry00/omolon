@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 
-import enums from "../../util/typeEnums.js";
 import definitions from "../../util/definitions.js";
 
 import "./styles.scss";
