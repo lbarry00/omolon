@@ -1,5 +1,40 @@
+@import "../../styles/colors.scss";
+
 .create-loadout-view {
   color: white;
+  padding: 10px;
+}
+
+.retrieving-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-loadout-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+
+  background-color: $omolon-slate;
+  border: 2px solid $omolon-teal;
+  padding: 30px;
+
+  .omolon-button {
+    padding: 30px 40px;
+    margin: 10px;
+    margin-right: 0;
+    background-color: white;
+    border: 0;
+    cursor: pointer;
+    color: $omolon-teal;
+    text-shadow: none;
+    font-weight: bold;
+    border: 4px solid darken($omolon-teal, 15%);
+  }
 }
 
 .equipped-items {
@@ -7,7 +42,8 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: flex-start;
-  height: 800px;
+
+  margin: 10px;
 
   .left {
     display: flex;
@@ -22,4 +58,30 @@
     justify-content: space-around;
     align-items: center;
   }
+}
+
+.loadout-item-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
+  flex-grow: 1;
+
+  .excluded {
+    color: darken(white, 50%);
+    text-decoration: line-through;
+  }
+
+  div {
+    margin: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+}
+
+.save-button {
+  margin: 20px;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: bold;
 }

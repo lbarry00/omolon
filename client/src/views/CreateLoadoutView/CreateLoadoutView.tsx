@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import LoadoutItemToggle from "../../components/LoadoutItemToggle/LoadoutItemToggle"
+import LoadoutItemToggle from "../../components/LoadoutItemToggle/LoadoutItemToggle";
+import OmolonButton from "../../components/OmolonButton/OmolonButton";
 import ls from "../../util/localStorage";
 import definitions from "../../util/definitions.js";
 import "./styles.scss";
@@ -90,7 +91,6 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
       // all items have been processed and added to inventory
       // update state to trigger re-render and display the stuff
       if (inventorySize === 9) {
-        console.log("done");
         thisObj.setState({ inventory: inventory, loadedItems: 9});
       } else {
         thisObj.setState({loadedItems: inventorySize});
@@ -104,8 +104,20 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
 
     // save in state
     let inventory = this.state.inventory;
-    inventory[item.inventorySlot] = item;
+    inventory[inventorySlot] = item;
     this.setState({inventory: inventory});
+  }
+
+  handleSave() {
+    const inventory = this.state.inventory;
+
+    _.forEach(inventory, function(item) {
+      if (item.saveToLoadout) {
+        console.log("Saving " + item.name);
+      } else {
+        console.log("Excluding " + item.name);
+      }
+    })
   }
 
   render() {
@@ -125,8 +137,10 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
       return (
         <div className="create-loadout-view">
           <h1>Create Loadout</h1>
-          <h3>Retrieving currently equipped items...</h3>
-          <h3>Retrieved {loadedItems}/9 items</h3>
+          <div className="retrieving-items">
+            <h3>Retrieving currently equipped items...</h3>
+            <h3>Retrieved {loadedItems}/9 items</h3>
+          </div>
         </div>
       )
     }
@@ -143,7 +157,23 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
     const rightInventory = rightList.map((inventorySlot) =>
       <LoadoutItemToggle item={inventory[inventorySlot]} inventorySlot={inventorySlot} key={inventorySlot}
         handleClick={() => this.handleToggleItem(inventory[inventorySlot], inventorySlot)} />
-  );
+    );
+
+    // same but with item names. conditionally add a class w/ strikethrough for the items not excluded
+    const namesLeft = leftList.map(function (inventorySlot) {
+      if (!inventory[inventorySlot].saveToLoadout) {
+        return <p className="excluded" key={inventorySlot}>{inventory[inventorySlot].name}</p>
+      } else {
+        return <p key={inventorySlot}>{inventory[inventorySlot].name}</p>
+      }
+    });
+    const namesRight = rightList.map(function (inventorySlot) {
+      if (!inventory[inventorySlot].saveToLoadout) {
+        return <p className="excluded" key={inventorySlot}>{inventory[inventorySlot].name}</p>
+      } else {
+        return <p key={inventorySlot}>{inventory[inventorySlot].name}</p>
+      }
+    });
 
     return (
       <div className="create-loadout-view">
@@ -154,6 +184,21 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
           </div>
           <div className="right">
             {rightInventory}
+          </div>
+          <div className="create-loadout-info">
+            <h2>Information</h2>
+            <p>Click an icon to exclude the item from the loadout. Click again to include it.</p>
+            <div className="loadout-item-list">
+              <div className="left">
+                <h4>Weapons</h4>
+                {namesLeft}
+              </div>
+              <div className="right">
+                <h4>Armor</h4>
+                {namesRight}
+              </div>
+            </div>
+            <OmolonButton to="#" text="SAVE LOADOUT" onClick={() => this.handleSave()} />
           </div>
         </div>
       </div>
