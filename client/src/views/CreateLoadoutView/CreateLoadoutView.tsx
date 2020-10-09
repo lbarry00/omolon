@@ -6,10 +6,12 @@ import definitions from "../../util/definitions.js";
 import "./styles.scss";
 
 const axios = require("axios");
+const qs = require("qs");
 const _ = require("lodash");
 
 interface ICreateLoadoutViewState {
   profileError: boolean,
+  submitStatus: string,
   inventory: object,
   loadedItems: number
 }
@@ -21,6 +23,7 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
 
     this.state = {
       profileError: false,
+      submitStatus: "",
       inventory: {},
       loadedItems: 0
     }
@@ -32,7 +35,6 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
     // validate profile
     const profile = ls.get("settings.profile");
     if (!profile) this.setState({"profileError": true});
-
 
     // retrieve player's currently equipped items
     const settings = {
@@ -47,7 +49,6 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
 
     axios(settings)
       .then(function(response) {
-
         // list of equipped items
         const equippedItems = response.data.Response.equipment.data.items;
         thisObj.lookupInventory(equippedItems)
@@ -77,13 +78,13 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
       let itemData = await definitions.getDefinition("DestinyInventoryItemLiteDefinition", item["itemHash"]);
 
       // format for easier names to handle
-      bucket = bucket.toLowerCase();
-      bucket = bucket.replace(" ", "-");
+      bucket = _.camelCase(bucket);
 
       inventory[bucket] = {
         "icon": "https://www.bungie.net" + itemData.displayProperties.icon,
-        "name": itemData.displayProperties.name,
+        "displayName": itemData.displayProperties.name,
         "instanceId": item.itemInstanceId,
+        "itemHash": item.itemHash,
         "saveToLoadout": true
       }
       inventorySize++;
@@ -109,15 +110,48 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
   }
 
   handleSave() {
+    const thisObj = this;
     const inventory = this.state.inventory;
+    const name = (document.getElementById("loadout-name-input") as HTMLInputElement).value;
+    const profile = ls.get("settings.profile");
 
-    _.forEach(inventory, function(item) {
+    // start building payload
+    let data = {
+      "membershipId": profile.membershipId,
+      "characterId": profile.characterId
+    }
+
+    // name is optional, add to payload if the user specified one
+    if (name) {
+      data["name"] = name;
+    }
+    // add items to payload if they've been marked as part of the loadout
+    _.forEach(inventory, function(item, inventorySlot) {
       if (item.saveToLoadout) {
-        console.log("Saving " + item.name);
-      } else {
-        console.log("Excluding " + item.name);
+        data[inventorySlot] = {
+          "itemHash": item.itemHash,
+          "itemInstanceId": item.instanceId
+        }
       }
-    })
+    });
+
+    const settings = {
+      method: "post",
+      url: "http://localhost:8000/loadouts/add",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      data: qs.stringify(data)
+    }
+
+    axios(settings)
+      .then(function(response) {
+        thisObj.setState({ submitStatus: "SUCCESS" });
+      })
+      .catch(function(error) {
+        thisObj.setState({ submitStatus: "FAIL" });
+        console.log(error);
+      })
   }
 
   render() {
@@ -132,7 +166,7 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
           <p>Try <a href="/character-select">selecting a character</a>.</p>
         </div>
       )
-    } else if (_.isEmpty(inventory)) {
+    } else if (_.isEmpty(inventory)) { // show loading state if inventory state hasn't been populated yet
       const loadedItems = this.state.loadedItems;
       return (
         <div className="create-loadout-view">
@@ -145,8 +179,8 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
       )
     }
 
-    const leftList = [ "subclass", "kinetic-weapons", "energy-weapons", "power-weapons" ];
-    const rightList = [ "helmet", "gauntlets", "chest-armor", "leg-armor", "class-armor" ];
+    const leftList = [ "subclass", "kineticWeapons", "energyWeapons", "powerWeapons" ];
+    const rightList = [ "helmet", "gauntlets", "chestArmor", "legArmor", "classArmor" ];
 
     // form the left and right sides
     // inventory icons that toggle whether they're included in the loadout onclick
@@ -162,18 +196,26 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
     // same but with item names. conditionally add a class w/ strikethrough for the items not excluded
     const namesLeft = leftList.map(function (inventorySlot) {
       if (!inventory[inventorySlot].saveToLoadout) {
-        return <p className="excluded" key={inventorySlot}>{inventory[inventorySlot].name}</p>
+        return <p className="excluded" key={inventorySlot}>{inventory[inventorySlot].displayName}</p>
       } else {
-        return <p key={inventorySlot}>{inventory[inventorySlot].name}</p>
+        return <p key={inventorySlot}>{inventory[inventorySlot].displayName}</p>
       }
     });
     const namesRight = rightList.map(function (inventorySlot) {
       if (!inventory[inventorySlot].saveToLoadout) {
-        return <p className="excluded" key={inventorySlot}>{inventory[inventorySlot].name}</p>
+        return <p className="excluded" key={inventorySlot}>{inventory[inventorySlot].displayName}</p>
       } else {
-        return <p key={inventorySlot}>{inventory[inventorySlot].name}</p>
+        return <p key={inventorySlot}>{inventory[inventorySlot].displayName}</p>
       }
     });
+
+    let submitStatusText;
+    const submitStatus = this.state.submitStatus;
+    if (submitStatus === "SUCCESS") {
+      submitStatusText = <p className="submit-status success">Loadout created successfully. View at <a href="/loadouts">My Loadouts</a></p>
+    } else if (submitStatus === "FAIL") {
+      submitStatusText = <p className="submit-status fail">Loadout creation failed. If this is a recurring error, it is likely a bug.</p>
+    }
 
     return (
       <div className="create-loadout-view">
@@ -198,6 +240,11 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
                 {namesRight}
               </div>
             </div>
+            <div className="loadout-name">
+              <p>(Optional) Loadout Name: </p>
+              <input type="text" id="loadout-name-input" required={false}></input>
+            </div>
+            {submitStatusText}
             <OmolonButton to="#" text="SAVE LOADOUT" onClick={() => this.handleSave()} />
           </div>
         </div>

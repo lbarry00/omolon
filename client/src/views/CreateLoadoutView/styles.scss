@@ -77,6 +77,44 @@
     margin-left: 50px;
     margin-right: 50px;
   }
+
+  h4 {
+    margin: 10px;
+  }
+
+  p {
+    margin: 7px;
+  }
+}
+
+.loadout-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+
+  font-size: 16px;
+
+  input[type=text] {
+    margin: 10px;
+    padding: 5px;
+    font-size: 16px;
+  }
+}
+
+.submit-status {
+  padding: 20px;
+  background-color: white;
+  font-weight: bold;
+  color: $omolon-charcoal;
+
+  &.success {
+    border: 3px solid $omolon-teal;
+  }
+  &.fail {
+    border: 3px solid red;
+  }
 }
 
 .save-button {
