@@ -18,45 +18,47 @@ exports.getAllLoadouts = function(req: Request, res: Response) {
 }
 
 exports.addLoadout = function(req: Request, res: Response) {
-  // start building the loadout
-  let loadout = new Loadout({
-    membershipId: req.body.membershipId,
-    characterId: req.body.characterId
-  });
-
-  // loadout name is optional
-  if (req.body.name) {
-    loadout["name"] = req.body.name;
-  }
-
-  // remove so it's just the actual loadout items left in the body
-  delete req.body.membershipId;
-  delete req.body.characterId;
-  delete req.body.name;
-
-  // iterate through the rest of the body and add items
-  _.forEach(req.body, function(value: any, key: any) {
-    // key: inventory slot of the item
-    // value: { itemHash: ########, itemInstanceId: ############### }
-    // add item data to loadout in the specific slot
-    loadout[key] = {
-      itemHash: value.itemHash,
-      itemInstanceId: value.itemInstanceId
-    }
-  });
-
-  // save and respond with success/error
-  loadout.save()
-    .then((loadout: any) => {
-      res.status(201).json({
-        "loadout": loadout
-      });
-    })
-    .catch((err: any) => {
-      res.status(400).json({
-        "error": err
-      });
+  if (!req.body.name) {
+    res.status(400).json({
+      "error": "Missing required parameter in request: name"
     });
+  } else {
+    // start building the loadout
+    let loadout = new Loadout({
+      membershipId: req.body.membershipId,
+      characterId: req.body.characterId,
+      name: req.body.name
+    });
+
+    // remove so it's just the actual loadout items left in the body
+    delete req.body.membershipId;
+    delete req.body.characterId;
+    delete req.body.name;
+
+    // iterate through the rest of the body and add items
+    _.forEach(req.body, function(value: any, key: any) {
+      // key: inventory slot of the item
+      // value: { itemHash: ########, itemInstanceId: ############### }
+      // add item data to loadout in the specific slot
+      loadout[key] = {
+        itemHash: value.itemHash,
+        itemInstanceId: value.itemInstanceId
+      }
+    });
+
+    // save and respond with success/error
+    loadout.save()
+      .then((loadout: any) => {
+        res.status(201).json({
+          "loadout": loadout
+        });
+      })
+      .catch((err: any) => {
+        res.status(400).json({
+          "error": err
+        });
+      });
+  }
 }
 
 exports.getLoadoutsByCharacter = function(req: Request, res: Response) {

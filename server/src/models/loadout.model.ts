@@ -28,7 +28,7 @@ const loadoutSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: false
+    required: true
   },
   helmet: {
     type: Item,

@@ -115,16 +115,19 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
     const name = (document.getElementById("loadout-name-input") as HTMLInputElement).value;
     const profile = ls.get("settings.profile");
 
+    // name is required
+    if (!name) {
+      this.setState({"submitStatus": "EMPTYNAME"});
+      return;
+    }
+
     // start building payload
     let data = {
       "membershipId": profile.membershipId,
-      "characterId": profile.characterId
+      "characterId": profile.characterId,
+      "name": name
     }
 
-    // name is optional, add to payload if the user specified one
-    if (name) {
-      data["name"] = name;
-    }
     // add items to payload if they've been marked as part of the loadout
     _.forEach(inventory, function(item, inventorySlot) {
       if (item.saveToLoadout) {
@@ -215,6 +218,8 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
       submitStatusText = <p className="submit-status success">Loadout created successfully. View at <a href="/loadouts">My Loadouts</a></p>
     } else if (submitStatus === "FAIL") {
       submitStatusText = <p className="submit-status fail">Loadout creation failed. If this is a recurring error, it is likely a bug.</p>
+    } else if (submitStatus === "EMPTYNAME") {
+      submitStatusText = <p className="submit-status fail">Loadout creation failed. Please specify a loadout name.</p>
     }
 
     return (
@@ -241,7 +246,7 @@ class CreateLoadoutView extends Component<{}, ICreateLoadoutViewState> {
               </div>
             </div>
             <div className="loadout-name">
-              <p>(Optional) Loadout Name: </p>
+              <p>Loadout Name: </p>
               <input type="text" id="loadout-name-input" required={false}></input>
             </div>
             {submitStatusText}
